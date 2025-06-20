@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automated Video Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1><i class="fas fa-video"></i> Automated Video Generator</h1>
+            <p>Transform articles and text into professional videos with AI-powered narration</p>
+        </header>
+
+        <div class="content">
+            <!-- Input Section -->
+            <section class="input-section">
+                <div class="tabs">
+                    <button class="tab-button active" data-tab="text">Text Input</button>
+                    <button class="tab-button" data-tab="url">Article URL</button>
+                    <button class="tab-button" data-tab="voice">Voice Clone</button>
+                </div>
+
+                <!-- Text Input Tab -->
+                <div id="text-tab" class="tab-content active">
+                    <h3>Enter Text Content</h3>
+                    <textarea id="text-input" placeholder="Paste your article text here..." rows="10"></textarea>
+                    <input type="text" id="text-title" placeholder="Video Title (optional)">
+                    <input type="text" id="text-author" placeholder="Author (optional)">
+                </div>
+
+                <!-- URL Input Tab -->
+                <div id="url-tab" class="tab-content">
+                    <h3>Article URL</h3>
+                    <input type="url" id="url-input" placeholder="https://example.com/article">
+                    <button id="preview-btn" class="secondary-btn">Preview Article</button>
+                    <div id="article-preview" class="preview-box" style="display: none;">
+                        <h4 id="preview-title"></h4>
+                        <p id="preview-author"></p>
+                        <p id="preview-text"></p>
+                        <img id="preview-image" style="max-width: 200px; display: none;">
+                    </div>
+                </div>
+
+                <!-- Voice Clone Tab -->
+                <div id="voice-tab" class="tab-content">
+                    <h3>Voice Cloning (Optional)</h3>
+                    <p>Upload a 6+ second audio sample to clone a voice for narration</p>
+                    <input type="file" id="voice-upload" accept="audio/*">
+                    <button id="test-voice-btn" class="secondary-btn" style="display: none;">Test Voice</button>
+                    <audio id="voice-test-player" controls style="display: none;"></audio>
+                </div>
+
+                <!-- Generation Settings -->
+                <div class="settings-section">
+                    <h3>Generation Settings</h3>
+                    <div class="settings-grid">
+                        <div class="setting-item">
+                            <label for="language-select">Language:</label>
+                            <select id="language-select">
+                                <option value="en">English</option>
+                                <option value="es">Spanish</option>
+                                <option value="fr">French</option>
+                                <option value="de">German</option>
+                                <option value="it">Italian</option>
+                                <option value="pt">Portuguese</option>
+                            </select>
+                        </div>
+                        <div class="setting-item">
+                            <label for="max-slides">Max Slides:</label>
+                            <input type="number" id="max-slides" value="8" min="3" max="15">
+                        </div>
+                        <div class="setting-item">
+                            <label for="words-per-slide">Words per Slide:</label>
+                            <input type="number" id="words-per-slide" value="50" min="20" max="100">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Generate Button -->
+                <button id="generate-btn" class="primary-btn">
+                    <i class="fas fa-play"></i> Generate Video
+                </button>
+            </section>
+
+            <!-- Progress Section -->
+            <section id="progress-section" class="progress-section" style="display: none;">
+                <h3>Video Generation Progress</h3>
+                <div class="progress-bar">
+                    <div id="progress-fill" class="progress-fill"></div>
+                </div>
+                <p id="progress-text">Starting generation...</p>
+                <div class="progress-steps">
+                    <div class="step" id="step-content">
+                        <i class="fas fa-file-text"></i>
+                        <span>Processing Content</span>
+                    </div>
+                    <div class="step" id="step-audio">
+                        <i class="fas fa-microphone"></i>
+                        <span>Generating Audio</span>
+                    </div>
+                    <div class="step" id="step-images">
+                        <i class="fas fa-images"></i>
+                        <span>Creating Visuals</span>
+                    </div>
+                    <div class="step" id="step-video">
+                        <i class="fas fa-video"></i>
+                        <span>Composing Video</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Results Section -->
+            <section id="results-section" class="results-section" style="display: none;">
+                <h3>Video Generated Successfully!</h3>
+                <div class="video-preview">
+                    <video id="generated-video" controls>
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+                <div class="video-info">
+                    <p><strong>Duration:</strong> <span id="video-duration">--</span></p>
+                    <p><strong>Size:</strong> <span id="video-size">--</span></p>
+                    <p><strong>Resolution:</strong> <span id="video-resolution">1920x1080</span></p>
+                </div>
+                <div class="download-section">
+                    <button id="download-btn" class="primary-btn">
+                        <i class="fas fa-download"></i> Download Video
+                    </button>
+                    <button id="new-video-btn" class="secondary-btn">
+                        <i class="fas fa-plus"></i> Create Another Video
+                    </button>
+                </div>
+            </section>
+
+            <!-- Error Section -->
+            <section id="error-section" class="error-section" style="display: none;">
+                <h3>Generation Error</h3>
+                <p id="error-message">An error occurred during video generation.</p>
+                <button id="retry-btn" class="secondary-btn">
+                    <i class="fas fa-redo"></i> Try Again
+                </button>
+            </section>
+        </div>
+
+        <footer class="footer">
+            <p>&copy; 2025 Open Source Video Generator | Built with Flask, MoviePy, and Coqui TTS</p>
+            <div class="footer-links">
+                <a href="https://github.com/your-username/video-generator" target="_blank">
+                    <i class="fab fa-github"></i> GitHub
+                </a>
+                <a href="#" onclick="showAbout()">
+                    <i class="fas fa-info-circle"></i> About
+                </a>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay" style="display: none;">
+        <div class="spinner"></div>
+        <p>Processing...</p>
+    </div>
+
+    <!-- About Modal -->
+    <div id="about-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" onclick="hideAbout()">&times;</span>
+            <h2>About This Application</h2>
+            <p>This open-source video generator transforms text articles into professional videos using:</p>
+            <ul>
+                <li><strong>Coqui XTTS v2</strong> - Advanced text-to-speech with voice cloning</li>
+                <li><strong>MoviePy</strong> - Professional video composition</li>
+                <li><strong>Newspaper3k</strong> - Intelligent article extraction</li>
+                <li><strong>Flask</strong> - Web framework</li>
+            </ul>
+            <p>Features natural-sounding narration, automatic slide generation, and professional styling.</p>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

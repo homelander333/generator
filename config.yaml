@@ -1,0 +1,73 @@
+# Configuration for Automated Video Generator
+# Adjust these settings based on your needs and available resources
+
+# Application Settings
+app:
+  debug: false
+  secret_key: "your-secret-key-change-this-in-production"
+  max_content_length: 16777216  # 16MB
+  upload_folder: "temp"
+  output_folder: "output"
+
+# Video Generation Settings
+video:
+  width: 1920
+  height: 1080
+  fps: 24
+  transition_duration: 0.5
+  max_duration: 600  # 10 minutes max
+
+# Slide Settings
+slides:
+  max_slides: 8
+  words_per_slide: 50
+  min_slide_duration: 3.0
+  max_slide_duration: 8.0
+  slide_width: 1920
+  slide_height: 1080
+
+# TTS Settings
+tts:
+  model: "xtts_v2"
+  language: "en"
+  speed: 1.0
+  voice_sample_duration: 6  # seconds minimum for voice cloning
+  
+# Web Scraping Settings
+scraping:
+  request_timeout: 10
+  user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+  max_content_length: 50000  # characters
+
+# Processing Settings
+processing:
+  max_text_length: 10000  # characters
+  min_text_length: 100   # characters
+  cleanup_temp_files: true
+  parallel_processing: false
+
+# File Storage
+storage:
+  temp_cleanup_interval: 3600  # 1 hour
+  max_temp_age: 86400  # 24 hours
+  output_retention: 604800  # 7 days
+
+# External Services (Optional)
+# Uncomment and configure if using external APIs
+# openai:
+#   api_key: "your-openai-api-key"
+#   model: "gpt-3.5-turbo"
+
+# unsplash:
+#   access_key: "your-unsplash-access-key"
+
+# Database (Optional - for job tracking)
+# database:
+#   url: "sqlite:///videos.db"
+#   track_jobs: true
+
+# Logging
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: "app.log"
